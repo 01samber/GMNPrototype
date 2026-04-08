@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
+/* Manual theme toggle: dark: utilities follow <html class="dark"> (not only OS preference). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
   body {
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-    @apply min-h-dvh bg-zinc-50 text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-50;
+    @apply min-h-dvh bg-zinc-50 text-zinc-900 antialiased transition-colors duration-200 dark:bg-zinc-950 dark:text-zinc-50;
   }
 }
