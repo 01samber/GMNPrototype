@@ -1,4 +1,4 @@
-# Build Vite app and deploy dist/ to GitHub Pages (static export — no configure-pages API call needed)
+# Build Vite app and deploy dist/ to GitHub Pages
 name: Deploy to GitHub Pages
 
 on:
@@ -24,17 +24,23 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
-          cache: npm
+          node-version: "20"
+          # Omit cache: npm — stale caches occasionally break npm ci on CI
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-fund --no-audit
 
-      - name: Build
+      - name: Typecheck & build
         run: npm run build
+        env:
+          CI: true
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      - name: Verify dist
+        run: test -d dist && test -f dist/index.html && du -sh dist && ls -la dist | head -20
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
